@@ -1,5 +1,7 @@
 package fit.iuh.se;
 
+import fit.iuh.se.SingletonPattern.Singleton;
+
 /**
  * @author : user664dntp
  * @mailto : phatdang19052004@gmail.com
@@ -8,5 +10,8 @@ package fit.iuh.se;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
+
+        Singleton singleton = Singleton.getInstance();
+
     }
 }
