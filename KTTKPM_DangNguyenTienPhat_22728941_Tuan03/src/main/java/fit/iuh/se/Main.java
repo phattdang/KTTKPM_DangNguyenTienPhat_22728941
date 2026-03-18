@@ -1,10 +1,9 @@
 package fit.iuh.se;
 
-
-import fit.iuh.se.tuan02.bai2.bai2_1.strategy.ExpressShippingStrategy;
-import fit.iuh.se.tuan02.bai2.bai2_1.strategy.InternationalShippingStrategy;
-import fit.iuh.se.tuan02.bai2.bai2_1.strategy.OrderContext;
-import fit.iuh.se.tuan02.bai2.bai2_1.strategy.StandardShippingStrategy;
+import fit.iuh.se.tuan02.bai2.bai2_1.decorator.BaseOrder;
+import fit.iuh.se.tuan02.bai2.bai2_1.decorator.DiscountDecorator;
+import fit.iuh.se.tuan02.bai2.bai2_1.decorator.GiftWrapDecorator;
+import fit.iuh.se.tuan02.bai2.bai2_1.decorator.Order;
 
 /**
  * @author : user664dntp
@@ -13,20 +12,24 @@ import fit.iuh.se.tuan02.bai2.bai2_1.strategy.StandardShippingStrategy;
  **/
 public class Main {
     public static void main(String[] args) {
-        // Khách hàng mua đơn hàng trị giá 500k
-        OrderContext myOrder = new OrderContext(500000);
+        System.out.println("--- Kịch bản 1: Mua đơn hàng bình thường ---");
+        Order myOrder = new BaseOrder(100000); // Đơn gốc 100k
+        System.out.println("Chi tiết: " + myOrder.getDescription());
+        System.out.println("Tổng tiền: " + myOrder.getCost() + " VND\n");
 
-        // Kịch bản 1: Khách chọn giao hàng tiêu chuẩn
-        myOrder.setShippingStrategy(new StandardShippingStrategy());
-        myOrder.calculateTotalWithShipping();
+        System.out.println("--- Kịch bản 2: Đơn hàng mang đi tặng (Thêm gói quà) ---");
+        Order giftOrder = new BaseOrder(100000);
+        giftOrder = new GiftWrapDecorator(giftOrder); // Bọc lớp thứ 1
+        System.out.println("Chi tiết: " + giftOrder.getDescription());
+        System.out.println("Tổng tiền: " + giftOrder.getCost() + " VND\n");
 
-        // Kịch bản 2: Khách đổi ý, cần hàng gấp nên chọn Hỏa tốc
-        // Chỉ cần set lại Strategy mới, không cần tạo mới object Order
-        myOrder.setShippingStrategy(new ExpressShippingStrategy());
-        myOrder.calculateTotalWithShipping();
+        System.out.println("--- Kịch bản 3: Đơn tặng + Có mã giảm giá (Bọc nhiều lớp) ---");
+        Order comboOrder = new BaseOrder(100000);
+        comboOrder = new GiftWrapDecorator(comboOrder);     // Bọc lớp 1: Gói quà
+        comboOrder = new DiscountDecorator(comboOrder);     // Bọc lớp 2: Giảm giá
 
-        // Kịch bản 3: Khách gửi tặng bạn ở nước ngoài
-        myOrder.setShippingStrategy(new InternationalShippingStrategy());
-        myOrder.calculateTotalWithShipping();
+        System.out.println("Chi tiết: " + comboOrder.getDescription());
+        System.out.println("Tổng tiền: " + comboOrder.getCost() + " VND");
+        // Giải thích: 100k (gốc) + 50k (gói quà) - 20k (giảm giá) = 130k
     }
 }
