@@ -1,6 +1,10 @@
 package fit.iuh.se;
 
-import fit.iuh.se.tuan02.bai2.bai2_1.state.OrderContext;
+
+import fit.iuh.se.tuan02.bai2.bai2_1.strategy.ExpressShippingStrategy;
+import fit.iuh.se.tuan02.bai2.bai2_1.strategy.InternationalShippingStrategy;
+import fit.iuh.se.tuan02.bai2.bai2_1.strategy.OrderContext;
+import fit.iuh.se.tuan02.bai2.bai2_1.strategy.StandardShippingStrategy;
 
 /**
  * @author : user664dntp
@@ -9,24 +13,20 @@ import fit.iuh.se.tuan02.bai2.bai2_1.state.OrderContext;
  **/
 public class Main {
     public static void main(String[] args) {
-        // Kịch bản 1: Đơn hàng giao thành công (Luồng chuẩn - Happy Path)
-        OrderContext order1 = new OrderContext();
-        order1.verifyOrder();
-        order1.processOrder();
-        order1.deliverOrder();
+        // Khách hàng mua đơn hàng trị giá 500k
+        OrderContext myOrder = new OrderContext(500000);
 
-        System.out.println("\n-----------------------------------\n");
+        // Kịch bản 1: Khách chọn giao hàng tiêu chuẩn
+        myOrder.setShippingStrategy(new StandardShippingStrategy());
+        myOrder.calculateTotalWithShipping();
 
-        // Kịch bản 2: Đơn hàng bị hủy giữa chừng
-        OrderContext order2 = new OrderContext();
-        order2.verifyOrder();
-        order2.cancelOrder();
-        order2.processOrder();
+        // Kịch bản 2: Khách đổi ý, cần hàng gấp nên chọn Hỏa tốc
+        // Chỉ cần set lại Strategy mới, không cần tạo mới object Order
+        myOrder.setShippingStrategy(new ExpressShippingStrategy());
+        myOrder.calculateTotalWithShipping();
 
-        System.out.println("\n-----------------------------------\n");
-
-        // Kịch bản 3: Thao tác sai quy trình
-        OrderContext order3 = new OrderContext();
-        order3.processOrder();
+        // Kịch bản 3: Khách gửi tặng bạn ở nước ngoài
+        myOrder.setShippingStrategy(new InternationalShippingStrategy());
+        myOrder.calculateTotalWithShipping();
     }
 }
